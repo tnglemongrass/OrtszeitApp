@@ -31,6 +31,21 @@ To run the app, execute the built binary from the cmd/ortszeit directory:
 ./ortszeit
 ```
 
+## Command Line Interface (CLI)
+This repository also includes a CLI version of the app, located in `cmd/cli.go`. To run the CLI, navigate to the `cmd` directory and run:
+```sh
+go run cli.go
+```
+You can also build the CLI binary using:
+```sh
+go build cli.go
+```
+And then run it using:
+```sh
+./cli
+```
+The CLI version of the app will print the current time, location, coordinates, and timezone to the console.
+
 ## Building an APK
 For building an installable Android APK:
 
