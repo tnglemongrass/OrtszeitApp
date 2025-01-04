@@ -30,6 +30,22 @@ To run the app, execute the built binary:
 ./OrtszeitApp
 ```
 
+## Building an APK
+For building an installable Android APK:
+
+1. Make sure you have Android SDK and NDK installed and properly configured
+2. Run the following command to build the APK:
+   ```sh
+   fyne package -os android -appID com.example.ortszeit -icon assets/icons/sun.png
+   ```
+3. The APK will be generated in your current directory
+4. To install on a connected Android device:
+   ```sh
+   adb install ortszeit.apk
+   ```
+
+For more information about mobile packaging with Fyne: https://docs.fyne.io/started/mobile.html
+
 ## Notes
 - The app currently uses a fixed location for demonstration purposes. You can modify the `main.go` file to fetch the user's location dynamically.
 - Ensure you have the necessary environment set up to build and run Fyne applications on Android.
