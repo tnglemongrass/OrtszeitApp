@@ -46,6 +46,10 @@ And then run it using:
 ```
 The CLI version of the app will print the current time, location, coordinates, and timezone to the console.
 
+### Flags
+- `--karlsruhe`: Use Karlsruhe, Germany as the location instead of the user's current location. This flag skips the API request and uses hardcoded values for Karlsruhe.
+- `--debug`: Print JSON response for debugging purposes.
+
 ## Building an APK
 For building an installable Android APK:
 

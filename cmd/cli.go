@@ -39,6 +39,15 @@ type IPInfo struct {
 	Org                string  `json:"org"`
 }
 
+var karlsruheIPInfo = &IPInfo{
+	City:      "Karlsruhe",
+	Region:    "Baden-Württemberg",
+	Country:   "DE",
+	Latitude:  49.009375,
+	Longitude: 8.40425,
+	Timezone:  "Europe/Berlin",
+}
+
 func getIPInfo(debug bool) (*IPInfo, error) {
 	resp, err := http.Get("https://ipapi.co/json")
 	if err != nil {
@@ -95,14 +104,22 @@ func apparentSolarTime(meanSolarTime time.Time, declination float64) time.Time {
 }
 
 func main() {
+	karlsruhe := flag.Bool("karlsruhe", false, "use Karlsruhe, Germany")
 	debug := flag.Bool("debug", false, "print JSON response")
 	flag.Parse()
 
-	ipInfo, err := getIPInfo(*debug)
+	var ipInfo *IPInfo
+	var err error
+
+if *karlsruhe {
+	ipInfo = karlsruheIPInfo
+} else {
+	ipInfo, err = getIPInfo(*debug)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+}
 
 	// Calculate standard time based on timezone
 	utcTime := time.Now().UTC()
@@ -129,7 +146,7 @@ func main() {
 	fmt.Printf("Local:              %s\n", standardTime.Format("15:04:05"))
 
 	fmt.Printf("\nCorrections:\n")
-	fmt.Printf("Equation of time:   %.1f minutes\n", eot)
+	fmt.Printf("Equation of time:   %.3f minutes\n", eot)
 
 	fmt.Printf("\nTime Calculations:\n")
 	fmt.Printf("Mean solar time:    %s\n", meanSolarTime.Format("15:04:05"))
