@@ -56,7 +56,8 @@ func apparentSolarTime(meanSolarTime time.Time, equationOfTime float64) time.Tim
 
 func updateLabels(ipInfo *IPInfo, labels []*widget.Label) {
 	utcTime := time.Now().UTC()
-	standardTime := utcTime.In(time.FixedZone(ipInfo.Timezone, 0))
+	location, _ := time.LoadLocation(ipInfo.Timezone)
+	standardTime := utcTime.In(location)
 
 	dayOfYear := standardTime.YearDay()
 
