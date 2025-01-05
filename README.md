@@ -7,6 +7,9 @@ This is an Android app built using Go and Fyne that displays the "Ortszeit" or t
 - Fyne: `fyne.io/fyne/v2`
 - Time: `time`
 - Math: `math`
+- Android SDK
+- Android NDK
+- Android Debug Bridge (ADB)
 
 ## Installation
 1. Ensure you have Go installed on your system.
@@ -19,7 +22,16 @@ This is an Android app built using Go and Fyne that displays the "Ortszeit" or t
    git clone https://github.com/yourusername/OrtszeitApp.git
    cd OrtszeitApp
    ```
-4. Build the app:
+4. Install the Android SDK and NDK:
+   - Download the Android SDK from the [official Android website](https://developer.android.com/studio#downloads).
+   - Download the Android NDK from the [official Android website](https://developer.android.com/ndk/downloads).
+   - Extract the SDK to a directory, for example, `C:\android`.
+   - Extract the NDK to a directory, for example, `C:\android-ndk-r25c`.
+5. Set the environment variables:
+   - Set `ANDROID_HOME` to the path of your Android SDK installation, for example, `C:\android`.
+   - Set `ANDROID_NDK_HOME` to the path of your Android NDK installation, for example, `C:\android-ndk-r25c`.
+   - Add the `platform-tools` directory of the Android SDK to your PATH, for example, `C:\android\platform-tools`.
+6. Build the app:
    ```sh
    cd cmd/ortszeit
    go build
@@ -66,9 +78,12 @@ For building an installable Android APK:
    ```
 3. The APK will be generated in the `gui` directory.
 4. To install on a connected Android device:
-   ```sh
-   adb install gui/ortszeit.apk
-   ```
+   - Connect your smartphone to your computer via USB.
+   - Enable USB debugging on your smartphone. This can usually be found in the Developer Options settings. If Developer Options is not visible, you can enable it by going to Settings > About phone and tapping the Build number several times until you see a message that Developer Options is enabled.
+   - Run the following command to install the APK:
+     ```sh
+     adb install gui/ortszeit.apk
+     ```
 
 For more information about mobile packaging with Fyne: https://docs.fyne.io/started/mobile.html
 
