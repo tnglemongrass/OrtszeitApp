@@ -97,7 +97,7 @@ func main() {
 		widget.NewLabel(""),
 	}
 
-toggleLocationButton := widget.NewButton("Toggle Location", func() {
+	toggleLocationButton := widget.NewButton("Toggle Location", func() {
 		if currentCity == "Karlsruhe" {
 			currentCity = "Munich"
 			ipInfo = munichIPInfo
@@ -110,9 +110,12 @@ toggleLocationButton := widget.NewButton("Toggle Location", func() {
 
 	updateLabels(ipInfo, labels)
 
-	updateButton := widget.NewButton("Update", func() {
-		updateLabels(ipInfo, labels)
-	})
+	ticker := time.NewTicker(1 * time.Second)
+	go func() {
+		for range ticker.C {
+			updateLabels(ipInfo, labels)
+		}
+	}()
 
 	w.SetContent(container.NewVBox(
 		title,
@@ -125,7 +128,6 @@ toggleLocationButton := widget.NewButton("Toggle Location", func() {
 		labels[6],
 		labels[7],
 		toggleLocationButton,
-		updateButton,
 	))
 
 	w.ShowAndRun()
