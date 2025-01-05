@@ -27,10 +27,12 @@ This is an Android app built using Go and Fyne that displays the "Ortszeit" or t
    - Download the Android NDK from the [official Android website](https://developer.android.com/ndk/downloads).
    - Extract the SDK to a directory, for example, `C:\android`.
    - Extract the NDK to a directory, for example, `C:\android-ndk-r25c`.
-5. Set the environment variables:
-   - Set `ANDROID_HOME` to the path of your Android SDK installation, for example, `C:\android`.
-   - Set `ANDROID_NDK_HOME` to the path of your Android NDK installation, for example, `C:\android-ndk-r25c`.
-   - Add the `platform-tools` directory of the Android SDK to your PATH, for example, `C:\android\platform-tools`.
+5. Set the respective environment variables, e.g. in PowerShell:
+     ```powershell
+     $env:ANDROID_HOME = "C:\android"
+     $env:ANDROID_NDK_HOME = "C:\android-ndk-r25c"
+     $env:Path += ";C:\android\platform-tools"
+     ```
 6. Build the app:
    ```sh
    cd cmd/ortszeit
@@ -72,9 +74,19 @@ winget install MSYS2.MSYS2
 For building an installable Android APK:
 
 1. Make sure you have Android SDK and NDK installed and properly configured.
+   - Define the environment variables:
+     - Set `ANDROID_HOME` to the path of your Android SDK installation, for example, `C:\android`.
+     - Set `ANDROID_NDK_HOME` to the path of your Android NDK installation, for example, `C:\android-ndk-r25c`.
+     - Add the `platform-tools` directory of the Android SDK to your PATH, for example, `C:\android\platform-tools`.
+     - Alternatively, you can set the environment variables in PowerShell using:
+       ```powershell
+       $env:ANDROID_HOME = "C:\android"
+       $env:ANDROID_NDK_HOME = "C:\android-ndk-r25c"
+       $env:Path += ";C:\android\platform-tools"
+       ```
 2. From the `gui` directory, run the following command to build the APK:
    ```sh
-   fyne package -os android -appID com.example.ortszeitapp -icon ../assets/icons/sun.png
+   fyne package -os android -appID com.example.ortszeitapp -icon ../assets/icons/sun.png -name Ortszeit
    ```
 3. The APK will be generated in the `gui` directory.
 4. To install on a connected Android device:
