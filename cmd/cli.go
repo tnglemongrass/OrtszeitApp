@@ -83,24 +83,18 @@ func getIPInfo(debug bool) (*IPInfo, error) {
 	return &ipInfo, nil
 }
 
-// Declination calculates the solar declination angle in degrees for a given day of the year.
-func Declination(dayOfYear int) float64 {
-	L := (2 * math.Pi / 365.25) * float64(dayOfYear-81)
-	declination := 23.45 * math.Sin(L)
-	return declination
+func equationOfTime(dayOfYear int, year int) float64 {
+	D := 6.24004077 + 0.01720197*(365.25*float64(year-2000)+float64(dayOfYear))
+	return -7.659*math.Sin(D) + 9.863*math.Sin(2*D+3.5932)
 }
 
-func equationOfTime(dayOfYear int) float64 {
-	L := (2 * math.Pi / 365.25) * float64(dayOfYear-81)
-	return (229.18*math.Sin(2*L) - 7.53*math.Sin(4*L) + 2.89*math.Sin(6*L)) / 60.0
+func meanSolarTime(utcTime time.Time, longitude float64) time.Time {
+	localCorrection := longitude * 4.0
+	return utcTime.Add(time.Duration(localCorrection * float64(time.Minute)))
 }
 
-func meanSolarTime(standardTime time.Time, equationOfTime float64) time.Time {
-	return standardTime.Add(time.Duration(equationOfTime * float64(time.Hour)))
-}
-
-func apparentSolarTime(meanSolarTime time.Time, declination float64) time.Time {
-	return meanSolarTime.Add(time.Duration(4.0 * math.Sin(declination) * float64(time.Minute)))
+func apparentSolarTime(meanSolarTime time.Time, equationOfTime float64) time.Time {
+	return meanSolarTime.Add(time.Duration(equationOfTime * float64(time.Minute)))
 }
 
 func main() {
@@ -111,15 +105,15 @@ func main() {
 	var ipInfo *IPInfo
 	var err error
 
-if *karlsruhe {
-	ipInfo = karlsruheIPInfo
-} else {
-	ipInfo, err = getIPInfo(*debug)
-	if err != nil {
-		fmt.Println(err)
-		return
+	if *karlsruhe {
+		ipInfo = karlsruheIPInfo
+	} else {
+		ipInfo, err = getIPInfo(*debug)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 	}
-}
 
 	// Calculate standard time based on timezone
 	utcTime := time.Now().UTC()
@@ -132,11 +126,10 @@ if *karlsruhe {
 
 	dayOfYear := standardTime.YearDay()
 
-	eot := equationOfTime(dayOfYear)
-	meanSolarTime := meanSolarTime(standardTime, eot)
+	eot := equationOfTime(dayOfYear, standardTime.Year())
+	meanSolarTime := meanSolarTime(utcTime, ipInfo.Longitude)
 
-	declination := Declination(dayOfYear)
-	apparentSolarTime := apparentSolarTime(meanSolarTime, declination)
+	apparentSolarTime := apparentSolarTime(meanSolarTime, eot)
 
 	fmt.Printf("Location:           %s, %s, %s\n", ipInfo.City, ipInfo.Region, ipInfo.Country)
 	fmt.Printf("Coordinates:        %.4f°N, %.4f°E\n", ipInfo.Latitude, ipInfo.Longitude)
@@ -151,5 +144,4 @@ if *karlsruhe {
 	fmt.Printf("\nTime Calculations:\n")
 	fmt.Printf("Mean solar time:    %s\n", meanSolarTime.Format("15:04:05"))
 	fmt.Printf("Apparent solar time:%s\n", apparentSolarTime.Format("15:04:05"))
-
 }
