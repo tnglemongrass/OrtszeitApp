@@ -48,6 +48,15 @@ var karlsruheIPInfo = &IPInfo{
 	Timezone:  "Europe/Berlin",
 }
 
+var munichIPInfo = &IPInfo{
+	City:      "Munich",
+	Region:    "Bavaria",
+	Country:   "DE",
+	Latitude:  48.135125,
+	Longitude: 11.581981,
+	Timezone:  "Europe/Berlin",
+}
+
 func getIPInfo(debug bool) (*IPInfo, error) {
 	resp, err := http.Get("https://ipapi.co/json")
 	if err != nil {
@@ -99,6 +108,7 @@ func apparentSolarTime(meanSolarTime time.Time, equationOfTime float64) time.Tim
 
 func main() {
 	karlsruhe := flag.Bool("karlsruhe", false, "use Karlsruhe, Germany")
+	munich := flag.Bool("munich", false, "use Munich, Germany")
 	debug := flag.Bool("debug", false, "print JSON response")
 	flag.Parse()
 
@@ -107,6 +117,8 @@ func main() {
 
 	if *karlsruhe {
 		ipInfo = karlsruheIPInfo
+	} else if *munich {
+		ipInfo = munichIPInfo
 	} else {
 		ipInfo, err = getIPInfo(*debug)
 		if err != nil {
