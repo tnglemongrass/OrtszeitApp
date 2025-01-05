@@ -72,7 +72,7 @@ func updateLabels(ipInfo *IPInfo, labels []*widget.Label) {
 	labels[4].SetText(fmt.Sprintf("Local:              %s", standardTime.Format("15:04:05")))
 	labels[5].SetText(fmt.Sprintf("Equation of time:   %.3f minutes", eot))
 	labels[6].SetText(fmt.Sprintf("Mean solar time:    %s", meanSolarTime.Format("15:04:05")))
-	labels[7].SetText(fmt.Sprintf("True solar time:%s", apparentSolarTime.Format("15:04:05")))
+	labels[7].SetText(fmt.Sprintf("True solar time:    %s", apparentSolarTime.Format("15:04:05")))
 }
 
 func main() {

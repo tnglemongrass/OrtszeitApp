@@ -75,6 +75,7 @@ The CLI version of the app will print the current time, location, coordinates, a
 ### Flags
 
 - `--karlsruhe`: Use Karlsruhe, Germany as the location instead of the user's current location. This flag skips the API request and uses hardcoded values for Karlsruhe.
+- `--munich`: Use Munich, Germany as the location instead of the user's current location. This skips the API request and uses hardcoded values for Munich.
 - `--debug`: Print JSON response for debugging purposes.
 
 ## Building an APK
@@ -122,3 +123,4 @@ winget install MSYS2.MSYS2
 
 - The app currently uses Munich (48.1351°N, 11.5820°E) as the default location.
 - Ensure you have the necessary environment set up to build and run Fyne applications on Android.
+- Most of this app was developed using the _Cline (prev. Claude Dev)_ plugin in VSCode (on [github](https://github.com/cline/cline), on [marketplace](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)). The very first lines of code were developed with the commercial model `Anthropic Claude-3-5-Sonnet-20241022`, and iterated further with `Qwen/Qwen2.5-Coder-32B-Instruct`.

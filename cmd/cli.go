@@ -155,5 +155,5 @@ func main() {
 
 	fmt.Printf("\nTime Calculations:\n")
 	fmt.Printf("Mean solar time:    %s\n", meanSolarTime.Format("15:04:05"))
-	fmt.Printf("True solar time:%s\n", apparentSolarTime.Format("15:04:05"))
+	fmt.Printf("True solar time:    %s\n", apparentSolarTime.Format("15:04:05"))
 }
