@@ -80,6 +80,10 @@ For building an installable Android APK:
 4. To install on a connected Android device:
    - Connect your smartphone to your computer via USB.
    - Enable USB debugging on your smartphone. This can usually be found in the Developer Options settings. If Developer Options is not visible, you can enable it by going to Settings > About phone and tapping the Build number several times until you see a message that Developer Options is enabled.
+   - Verify the device is recognized by running:
+     ```sh
+     adb devices
+     ```
    - Run the following command to install the APK:
      ```sh
      adb install gui/ortszeit.apk
