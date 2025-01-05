@@ -95,17 +95,16 @@ For building an installable Android APK:
    $env:ANDROID_NDK_HOME="C:\android-ndk-r25c"
    fyne package -os android -appID com.example.ortszeitapp -icon ../assets/icons/sun.png -name Ortszeit
    ```
-   The APK will be generated in the `gui` directory.
-4. Install the apk on a connected Android device
-   - Verify the device is recognized:
-     ```sh
-     $env:Path += ";C:\android\platform-tools"
-     adb devices
-     ```
+   This will generate `Ortszeit.apk` in the `gui` directory.
+4. Install the APK on a connected Android device
    - Install the APK:
      ```powershell
      $env:Path += ";C:\android\platform-tools"
-     adb install gui/ortszeit.apk
+     adb install ortszeit.apk
+     ```
+   - If above fails, verify the device is recognized:
+     ```sh
+     adb devices
      ```
 
 USB debugging needs to be enabled on your smartphone. If Developer Options is not visible, you can enable it by going to Settings > About phone and tapping the Build number several times until you see a message that Developer Options is enabled.

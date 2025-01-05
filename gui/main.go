@@ -4,8 +4,12 @@ import (
 	"fmt"
 	"math"
 	"time"
+
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -27,6 +31,15 @@ var karlsruheIPInfo = &IPInfo{
 	Timezone:  "Europe/Berlin",
 }
 
+var munichIPInfo = &IPInfo{
+	City:      "Munich",
+	Region:    "Bavaria",
+	Country:   "DE",
+	Latitude:  48.135125,
+	Longitude: 11.581981,
+	Timezone:  "Europe/Berlin",
+}
+
 func equationOfTime(dayOfYear int, year int) float64 {
 	D := 6.24004077 + 0.01720197*(365.25*float64(year-2000)+float64(dayOfYear))
 	return -7.659*math.Sin(D) + 9.863*math.Sin(2*D+3.5932)
@@ -41,7 +54,7 @@ func apparentSolarTime(meanSolarTime time.Time, equationOfTime float64) time.Tim
 	return meanSolarTime.Add(time.Duration(equationOfTime * float64(time.Minute)))
 }
 
-func updateTimeLabels(ipInfo *IPInfo, labels []*widget.Label) {
+func updateLabels(ipInfo *IPInfo, labels []*widget.Label) {
 	utcTime := time.Now().UTC()
 	standardTime := utcTime.In(time.FixedZone(ipInfo.Timezone, 0))
 
@@ -65,6 +78,12 @@ func main() {
 	a := app.New()
 	w := a.NewWindow("Ortszeit")
 
+	title := canvas.NewText("Ortszeit App", theme.Color(theme.ColorNameHeaderBackground))
+	title.Alignment = fyne.TextAlignCenter
+	title.TextStyle = fyne.TextStyle{Bold: true}
+	title.TextSize = 24
+
+	currentCity := "Karlsruhe"
 	ipInfo := karlsruheIPInfo
 
 	labels := []*widget.Label{
@@ -78,13 +97,25 @@ func main() {
 		widget.NewLabel(""),
 	}
 
-	updateTimeLabels(ipInfo, labels)
+toggleLocationButton := widget.NewButton("Toggle Location", func() {
+		if currentCity == "Karlsruhe" {
+			currentCity = "Munich"
+			ipInfo = munichIPInfo
+		} else {
+			currentCity = "Karlsruhe"
+			ipInfo = karlsruheIPInfo
+		}
+		updateLabels(ipInfo, labels)
+	})
+
+	updateLabels(ipInfo, labels)
 
 	updateButton := widget.NewButton("Update", func() {
-		updateTimeLabels(ipInfo, labels)
+		updateLabels(ipInfo, labels)
 	})
 
 	w.SetContent(container.NewVBox(
+		title,
 		labels[0],
 		labels[1],
 		labels[2],
@@ -93,6 +124,7 @@ func main() {
 		labels[5],
 		labels[6],
 		labels[7],
+		toggleLocationButton,
 		updateButton,
 	))
 
