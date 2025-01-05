@@ -1,7 +1,7 @@
 //go:build android || ios
 // +build android ios
 
-package main
+package mainold
 
 import (
 	"time"

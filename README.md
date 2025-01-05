@@ -26,7 +26,7 @@ This is an Android app built using Go and Fyne that displays the "Ortszeit" or t
    ```
 
 ## Running the App
-To run the app, execute the built binary from the cmd/ortszeit directory:
+To run the app, execute the built binary from the `cmd/ortszeit` directory:
 ```sh
 ./ortszeit
 ```
@@ -51,21 +51,27 @@ The CLI version of the app will print the current time, location, coordinates, a
 - `--debug`: Print JSON response for debugging purposes.
 
 ## Building an APK
+
+**Note for Windows Users:** According to [Fyne Documentation](https://docs.fyne.io/started/), for development of the Android app on Windows, MSYS2 needs to be installed using the command:
+```sh
+winget install MSYS2.MSYS2
+```
+
 For building an installable Android APK:
 
-1. Make sure you have Android SDK and NDK installed and properly configured
-2. From the cmd/ortszeit directory, run the following command to build the APK:
+1. Make sure you have Android SDK and NDK installed and properly configured.
+2. From the `gui` directory, run the following command to build the APK:
    ```sh
-   fyne package -os android -appID com.ortszeitapp.ortszeit -icon ../../assets/icons/sun.png
+   fyne package -os android -appID com.example.ortszeitapp -icon ../assets/icons/sun.png
    ```
-3. The APK will be generated in your current directory
+3. The APK will be generated in the `gui` directory.
 4. To install on a connected Android device:
    ```sh
-   adb install ortszeit.apk
+   adb install gui/ortszeit.apk
    ```
 
 For more information about mobile packaging with Fyne: https://docs.fyne.io/started/mobile.html
 
 ## Notes
-- The app currently uses Munich (48.1351°N, 11.5820°E) as the default location
-- Ensure you have the necessary environment set up to build and run Fyne applications on Android
+- The app currently uses Munich (48.1351°N, 11.5820°E) as the default location.
+- Ensure you have the necessary environment set up to build and run Fyne applications on Android.
