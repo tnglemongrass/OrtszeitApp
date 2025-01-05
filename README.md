@@ -79,48 +79,45 @@ The CLI version of the app will print the current time, location, coordinates, a
 
 ## Building an APK
 
-**Note for Windows Users:** According to [Fyne Documentation](https://docs.fyne.io/started/), for development of the Android app on Windows, MSYS2 needs to be installed using the command:
-
-```sh
-winget install MSYS2.MSYS2
-```
-
 For building an installable Android APK:
 
-1. Make sure you have Android SDK and NDK installed and properly configured.
-   - Define the environment variables:
-     - Set `ANDROID_HOME` to the path of your Android SDK installation, for example, `C:\android`.
-     - Set `ANDROID_NDK_HOME` to the path of your Android NDK installation, for example, `C:\android-ndk-r25c`.
-     - Add the `platform-tools` directory of the Android SDK to your PATH, for example, `C:\android\platform-tools`.
-     - Alternatively, you can set the environment variables in PowerShell using:
+1. Make sure you have Android SDK and NDK are properly configured.
+   - Define the environment variables, e.g. for PowerShell
        ```powershell
        $env:ANDROID_HOME = "C:\android"
        $env:ANDROID_NDK_HOME = "C:\android-ndk-r25c"
        $env:Path += ";C:\android\platform-tools"
        ```
-2. From the `gui` directory, run the following command to build the APK:
+2. Build the APK from within the `gui` directory
    ```powershell
    cd ./gui/
    $env:ANDROID_HOME="C:\android"
    $env:ANDROID_NDK_HOME="C:\android-ndk-r25c"
    fyne package -os android -appID com.example.ortszeitapp -icon ../assets/icons/sun.png -name Ortszeit
    ```
-3. The APK will be generated in the `gui` directory.
-4. To install on a connected Android device:
-   - Connect your smartphone to your computer via USB.
-   - Enable USB debugging on your smartphone. This can usually be found in the Developer Options settings. If Developer Options is not visible, you can enable it by going to Settings > About phone and tapping the Build number several times until you see a message that Developer Options is enabled.
-   - Verify the device is recognized by running:
+   The APK will be generated in the `gui` directory.
+4. Install the apk on a connected Android device
+   - Verify the device is recognized:
      ```sh
      $env:Path += ";C:\android\platform-tools"
      adb devices
      ```
-   - Run the following command to install the APK:
+   - Install the APK:
      ```powershell
      $env:Path += ";C:\android\platform-tools"
      adb install gui/ortszeit.apk
      ```
 
+USB debugging needs to be enabled on your smartphone. If Developer Options is not visible, you can enable it by going to Settings > About phone and tapping the Build number several times until you see a message that Developer Options is enabled.
+
 For more information about mobile packaging with Fyne: https://docs.fyne.io/started/mobile.html
+
+**Note for Windows Users:** According to [Fyne Documentation](https://docs.fyne.io/started/), for development of the Android app on Windows, MSYS2 needs to be installed using the command:
+
+```sh
+winget install MSYS2.MSYS2
+```
+
 
 ## Notes
 
