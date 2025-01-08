@@ -2,7 +2,7 @@
 
 ## Description
 
-This is an Android app built using Go and Fyne that displays the "Ortszeit" or true solar time for the user's current location by means of the sun, instead of the time zone the user is in.
+This is an Android app that displays the "Ortszeit" or true solar time for the user's current location by means of the sun, instead of the time zone the user is in, built using Go and Fyne.
 
 ## Requirements
 
@@ -38,7 +38,7 @@ For building the Android APK:
    $env:ANDROID_NDK_HOME = "C:\android-ndk-r25c"
    $env:Path += ";C:\android\platform-tools"
    ```
-5. Build and run the cli app:
+5. Build and run the CLI app:
    ```sh
    cd cmd
    go build cli.go
@@ -48,7 +48,7 @@ For building the Android APK:
    ```powershell
    cd gui
    fyne package -os android -appID com.example.ortszeitapp -icon ../assets/icons/sun.png -name Ortszeit
-   adb install ortszeit.apk
+   adb install Ortszeit.apk
    ```
 
 ## Command Line Interface (CLI)
@@ -106,6 +106,6 @@ winget install MSYS2.MSYS2
 
 ## Notes
 
-- The app uses Munich (48.1351°N, 11.5820°E) as the default location
+- The app supports switching between Karlsruhe and Munich locations
 - Dependencies are managed through Go modules and will be automatically installed when building
 - Most of this app was developed using the _Cline (prev. Claude Dev)_ plugin in VSCode (on [github](https://github.com/cline/cline), on [marketplace](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)). The very first lines of code were developed with the commercial model `Anthropic Claude-3-5-Sonnet-20241022`, and iterated further with `Qwen/Qwen2.5-Coder-32B-Instruct`.
