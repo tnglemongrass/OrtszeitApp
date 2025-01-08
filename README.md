@@ -115,9 +115,10 @@ This repository includes a GitHub Actions pipeline that automatically builds the
 - **Mobile Platform:**
   - Android APK
 
-The pipeline runs automatically on:
-- Every push to the `main` branch
-- Every pull request to the `main` branch
+The pipeline runs:
+- Automatically on every push to the `main` branch
+- Automatically on every pull request to the `main` branch
+- Manually via the "Actions" tab in GitHub (click "Build" workflow → "Run workflow")
 
 To access the builds:
 1. Go to the "Actions" tab in the GitHub repository
