@@ -26,17 +26,17 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y xorg-dev gcc libgl1-mesa-dev xorg-dev gcc-mingw-w64 gcc-multilib
         
-    - name: Install OSXCross for macOS cross-compilation
-      run: |
-        mkdir -p /tmp/osxcross
-        cd /tmp/osxcross
-        wget -q https://github.com/tpoechtrager/osxcross/archive/master.zip
-        unzip -q master.zip
-        cd osxcross-master
-        wget -q https://github.com/joseluisq/macosx-sdks/releases/download/12.3/MacOSX12.3.sdk.tar.xz
-        mv MacOSX12.3.sdk.tar.xz tarballs/
-        UNATTENDED=1 ./build.sh
-        echo "PATH=/tmp/osxcross/osxcross-master/target/bin:$PATH" >> $GITHUB_ENV
+    # - name: Install OSXCross for macOS cross-compilation
+    #   run: |
+    #     mkdir -p /tmp/osxcross
+    #     cd /tmp/osxcross
+    #     wget -q https://github.com/tpoechtrager/osxcross/archive/master.zip
+    #     unzip -q master.zip
+    #     cd osxcross-master
+    #     wget -q https://github.com/joseluisq/macosx-sdks/releases/download/12.3/MacOSX12.3.sdk.tar.xz
+    #     mv MacOSX12.3.sdk.tar.xz tarballs/
+    #     UNATTENDED=1 ./build.sh
+    #     echo "PATH=/tmp/osxcross/osxcross-master/target/bin:$PATH" >> $GITHUB_ENV
 
     - name: Install Fyne
       run: |
@@ -68,16 +68,16 @@ jobs:
         cd gui
         fyne package -os windows -executable Ortszeit-windows.exe main.go
 
-    # Build for macOS
-    - name: Build macOS CLI
-      run: |
-        cd cmd
-        GOOS=darwin GOARCH=amd64 CGO_ENABLED=1 CC=o64-clang go build -v -o ortszeit-cli-mac cli.go
+    # # Build for macOS
+    # - name: Build macOS CLI
+    #   run: |
+    #     cd cmd
+    #     GOOS=darwin GOARCH=amd64 CGO_ENABLED=1 CC=o64-clang go build -v -o ortszeit-cli-mac cli.go
 
-    - name: Build macOS GUI
-      run: |
-        cd gui
-        fyne package -os darwin -executable Ortszeit-macos main.go
+    # - name: Build macOS GUI
+    #   run: |
+    #     cd gui
+    #     fyne package -os darwin -executable Ortszeit-macos main.go
 
     - name: Upload Linux artifacts
       uses: actions/upload-artifact@v4
@@ -95,13 +95,13 @@ jobs:
           cmd/ortszeit-cli.exe
           gui/Ortszeit-windows.exe
 
-    - name: Upload macOS artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: ortszeit-macos
-        path: |
-          cmd/ortszeit-cli-mac
-          gui/Ortszeit-macos.app
+    # - name: Upload macOS artifacts
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: ortszeit-macos
+    #     path: |
+    #       cmd/ortszeit-cli-mac
+    #       gui/Ortszeit-macos.app
 
   build-android:
     name: Build Android
