@@ -1,0 +1,112 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-desktop:
+    name: Build Desktop (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22'
+        check-latest: true
+        
+    - name: Install dependencies (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xorg-dev gcc libgl1-mesa-dev xorg-dev
+
+    - name: Install dependencies (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install gcc
+
+    - name: Install dependencies (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        choco install mingw
+        choco install msys2
+
+    - name: Install Fyne
+      run: |
+        go install fyne.io/fyne/v2/cmd/fyne@latest
+
+    - name: Build CLI
+      run: |
+        cd cmd
+        go build -v -o ortszeit-cli${{ matrix.os == 'windows-latest' && '.exe' || '' }} cli.go
+
+    - name: Build GUI
+      run: |
+        cd gui
+        fyne package -os ${{ matrix.os == 'windows-latest' && 'windows' || matrix.os == 'macos-latest' && 'darwin' || 'linux' }}
+
+    - name: Upload CLI artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ortszeit-cli-${{ matrix.os }}
+        path: cmd/ortszeit-cli${{ matrix.os == 'windows-latest' && '.exe' || '' }}
+
+    - name: Upload GUI artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ortszeit-gui-${{ matrix.os }}
+        path: |
+          gui/Ortszeit.app
+          gui/Ortszeit.exe
+          gui/Ortszeit
+
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22'
+        check-latest: true
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: Install NDK
+      run: |
+        sdkmanager --install "ndk;25.2.9519653"
+        echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.2.9519653" >> $GITHUB_ENV
+
+    - name: Install Fyne
+      run: |
+        go install fyne.io/fyne/v2/cmd/fyne@latest
+
+    - name: Build Android APK
+      run: |
+        cd gui
+        fyne package -os android -appID com.example.ortszeitapp -icon ../assets/icons/sun.png -name Ortszeit
+
+    - name: Upload Android artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ortszeit-android
+        path: gui/Ortszeit.apk

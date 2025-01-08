@@ -104,6 +104,35 @@ For more information about mobile packaging with Fyne: https://docs.fyne.io/star
 winget install MSYS2.MSYS2
 ```
 
+## Automated Builds
+
+This repository includes a GitHub Actions pipeline that automatically builds the app for multiple platforms:
+
+- **Desktop Platforms:**
+  - Linux (CLI and GUI)
+  - macOS (CLI and GUI)
+  - Windows (CLI and GUI)
+- **Mobile Platform:**
+  - Android APK
+
+The pipeline runs automatically on:
+- Every push to the `main` branch
+- Every pull request to the `main` branch
+
+To access the builds:
+1. Go to the "Actions" tab in the GitHub repository
+2. Click on the latest workflow run
+3. Download the artifacts for your platform from the "Artifacts" section
+
+Available artifacts:
+- `ortszeit-cli-ubuntu-latest`: Linux CLI executable
+- `ortszeit-cli-macos-latest`: macOS CLI executable
+- `ortszeit-cli-windows-latest`: Windows CLI executable (.exe)
+- `ortszeit-gui-ubuntu-latest`: Linux GUI application
+- `ortszeit-gui-macos-latest`: macOS GUI application (.app)
+- `ortszeit-gui-windows-latest`: Windows GUI executable (.exe)
+- `ortszeit-android`: Android APK
+
 ## Notes
 
 - The app supports switching between Karlsruhe and Munich locations
