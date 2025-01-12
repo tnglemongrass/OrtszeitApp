@@ -39,24 +39,24 @@ For building the Android APK:
    $env:Path += ";C:\android\platform-tools"
    ```
 5. Build and run the CLI app:
-   ```sh
-   cd cmd
-   go build cli.go
+   ```powershell
+   cd cmd/cli
+   go build main.go
    ./cli.exe
    ```
 6. Build and install the Android app:
    ```powershell
-   cd gui
-   fyne package -os android -appID com.example.ortszeitapp -icon ../assets/icons/sun.png -name Ortszeit
+   cd cmd/gui
+   fyne package -os android -appID com.example.ortszeitapp -icon ../../assets/icons/sun.png -name Ortszeit
    adb install Ortszeit.apk
    ```
 
 ## Command Line Interface (CLI)
 
-This repository includes a CLI version of the app, located in `cmd/cli.go`. To run the CLI:
+This repository includes a CLI version of the app, located in `cmd/cli/main.go`. To run the CLI:
 
 ```sh
-go run cmd/cli.go
+go run cmd/cli/main.go
 ```
 
 The CLI version prints the location, coordinates, timezone, and various calculated local and solar times based on the location. It supports options for using predefined locations (Karlsruhe and Munich) or fetching the user's current IP information (default). It also includes a debug option to print the JSON response and the IPInfo struct.
@@ -77,14 +77,14 @@ To build an installable Android APK:
        $env:ANDROID_NDK_HOME = "C:\android-ndk-r25c"
        $env:Path += ";C:\android\platform-tools"
        ```
-2. Build the APK from within the `gui` directory
+2. Build the APK from within the `cmd/gui` directory
    ```powershell
-   cd ./gui/
+   cd ./cmd/gui/
    $env:ANDROID_HOME="C:\android"
    $env:ANDROID_NDK_HOME="C:\android-ndk-r25c"
    fyne package -os android -appID com.example.ortszeitapp -icon ../assets/icons/sun.png -name Ortszeit
    ```
-   This generates `Ortszeit.apk` in the `gui` directory.
+   This generates `Ortszeit.apk` in the `cmd/gui` directory.
 3. Install the APK on a connected Android device
      ```powershell
      $env:Path += ";C:\android\platform-tools"
@@ -99,10 +99,17 @@ Note: USB debugging must be enabled on your smartphone. Enable Developer Options
 
 For more information about mobile packaging with Fyne: https://docs.fyne.io/started/mobile.html
 
-**Note for Windows Users:** According to [Fyne Documentation](https://docs.fyne.io/started/), for development of the Android app on Windows, MSYS2 is required:
-```sh
-winget install MSYS2.MSYS2
-```
+## Building a Windows Executable
+
+You need an installed c compiler (e.g. via `scoop install gcc`).
+
+From within the `cmd/gui` directory:
+   ```powershell
+   cd .\cmd\gui
+   fyne package -os windows -appID com.example.ortszeitapp -icon ..\..\assets\icons\sun.png -name Ortszeit
+   ```
+
+The executable is available as `Ortszeit.exe` in that directory.
 
 ## Notes
 
