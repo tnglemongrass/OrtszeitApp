@@ -59,7 +59,7 @@ This repository includes a CLI version of the app, located in `cmd/cli.go`. To r
 go run cmd/cli.go
 ```
 
-The CLI version prints the current time, location, coordinates, and timezone to the console.
+The CLI version prints the location, coordinates, timezone, and various calculated local and solar times based on the location. It supports options for using predefined locations (Karlsruhe and Munich) or fetching the user's current IP information (default). It also includes a debug option to print the JSON response and the IPInfo struct.
 
 ### CLI Flags
 
