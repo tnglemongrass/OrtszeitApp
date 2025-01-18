@@ -1,4 +1,4 @@
-# Ortszeit Android App
+# Ortszeit Android App <img src="assets/icons/sun.png" width="48" height="48" alt="Sun Icon" style="vertical-align: middle">
 
 ## Description
 
