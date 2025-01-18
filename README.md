@@ -113,6 +113,9 @@ The executable is available as `Ortszeit.exe` in that directory.
 
 ## Notes
 
-- The app supports switching between Karlsruhe and Munich locations
-- Dependencies are managed through Go modules and will be automatically installed when building
+- The app supports switching between Karlsruhe and Munich locations. Cli also supports IP based geolocation.
+- The project development started in a GitHub Codespace.
 - Most of this app was developed using the _Cline (prev. Claude Dev)_ plugin in VSCode (on [github](https://github.com/cline/cline), on [marketplace](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)). The very first lines of code were developed with the commercial model `Anthropic Claude-3-5-Sonnet-20241022`, and iterated further with `Qwen/Qwen2.5-Coder-32B-Instruct`.
+- Even the icon was created by Cline and Sonnet with a single instruction. The exact instructions were _TODO_. Full conversation is available [here(TODO: link+file)](TODO.md).
+- The initially generated version (Android + Fyne) did not compile and was way too complex to debug even the development setup. I started over with a simple cli version that just displayed the current time and iterated from there. It was much easier for cline to debug the cli on its own. Cline could run the script, read its output, iterate over server error messages, add temporary logging statements for the response jsons, and so on.
+- The cli was then converted to a Fyne app with the . Conversation log is available here: [TODO: link+file](find_correct_filename.md).
