@@ -139,6 +139,7 @@ func main() {
 	dayOfYear := standardTime.YearDay()
 
 	eot := equationOfTime(dayOfYear, standardTime.Year())
+	localCorrection := ipInfo.Longitude * 4.0
 	meanSolarTime := meanSolarTime(utcTime, ipInfo.Longitude)
 
 	apparentSolarTime := apparentSolarTime(meanSolarTime, eot)
@@ -147,10 +148,11 @@ func main() {
 	fmt.Printf("Coordinates:        %.4f°N, %.4f°E\n", ipInfo.Latitude, ipInfo.Longitude)
 	fmt.Printf("Timezone:           %s (UTC%s)\n", ipInfo.Timezone, ipInfo.UTCOffset)
 
-	fmt.Printf("UTC:                %s\n", time.Now().UTC().Format("15:04:05 / 2006-01-02"))
+	fmt.Printf("UTC:                %s\n", utcTime.Format("15:04:05 / 2006-01-02"))
 	fmt.Printf("Local:              %s\n", standardTime.Format("15:04:05"))
 
 	fmt.Printf("\nCorrections:\n")
+	fmt.Printf("Local correction:   %.3f minutes\n", localCorrection)
 	fmt.Printf("Equation of time:   %.3f minutes\n", eot)
 
 	fmt.Printf("\nTime Calculations:\n")
