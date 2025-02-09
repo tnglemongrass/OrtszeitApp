@@ -1,0 +1,166 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-linux-cli:
+    name: Build Linux CLI
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22'
+        check-latest: true
+        
+    - name: Build Linux CLI
+      run: |
+        cd cmd
+        GOOS=linux GOARCH=amd64 go build -v -o ortszeit-cli cli.go
+        ls -l ortszeit-cli  # Debug: Verify binary was created
+
+    - name: Upload Linux CLI artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ortszeit-linux-cli
+        path: cmd/ortszeit-cli
+        if-no-files-found: error  # Fail if artifact not found
+
+  build-linux-gui:
+    name: Build Linux GUI
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22'
+        check-latest: true
+        
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xorg-dev gcc libgl1-mesa-dev
+
+    - name: Install Fyne
+      run: |
+        go install fyne.io/fyne/v2/cmd/fyne@latest
+
+    - name: Prepare Icon
+      run: |
+        cp assets/icons/sun.png gui/Icon.png
+        ls -l gui/Icon.png  # Debug: Verify icon was copied
+
+    - name: Build Linux GUI
+      run: |
+        cd gui
+        fyne package -os linux -executable Ortszeit-linux main.go
+        ls -l Ortszeit-linux  # Debug: Verify binary was created
+
+    - name: Upload Linux GUI artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ortszeit-linux-gui
+        path: gui/Ortszeit-linux
+        if-no-files-found: error  # Fail if artifact not found
+
+  build-windows:
+    name: Build Windows
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22'
+        check-latest: true
+        
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-mingw-w64 gcc-multilib
+
+    - name: Install Fyne
+      run: |
+        go install fyne.io/fyne/v2/cmd/fyne@latest
+
+    - name: Build Windows CLI
+      run: |
+        cd cmd
+        GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -v -o ortszeit-cli.exe cli.go
+        ls -l ortszeit-cli.exe  # Debug: Verify binary was created
+
+    - name: Prepare Icon
+      run: |
+        cp assets/icons/sun.png gui/Icon.png
+        ls -l gui/Icon.png  # Debug: Verify icon was copied
+
+    - name: Build Windows GUI
+      run: |
+        cd gui
+        fyne package -os windows -executable Ortszeit-windows.exe main.go
+        ls -l Ortszeit-windows.exe  # Debug: Verify binary was created
+
+    - name: Upload Windows artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ortszeit-windows
+        path: |
+          cmd/ortszeit-cli.exe
+          gui/Ortszeit-windows.exe
+        if-no-files-found: error  # Fail if artifacts not found
+
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22'
+        check-latest: true
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: Install NDK
+      run: |
+        sdkmanager --install "ndk;25.2.9519653"
+        echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.2.9519653" >> $GITHUB_ENV
+
+    - name: Install Fyne
+      run: |
+        go install fyne.io/fyne/v2/cmd/fyne@latest
+
+    - name: Build Android APK
+      run: |
+        cd gui
+        cp ../assets/icons/sun.png Icon.png
+        ls -l Icon.png  # Debug: Verify icon was copied
+        fyne package -os android -appID com.example.ortszeitapp -name Ortszeit-android main.go
+        ls -l Ortszeit-android.apk  # Debug: Verify APK was created
+
+    - name: Upload Android artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ortszeit-android
+        path: gui/Ortszeit-android.apk
+        if-no-files-found: error  # Fail if artifact not found
