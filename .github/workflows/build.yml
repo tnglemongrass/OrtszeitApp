@@ -66,37 +66,39 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ortszeit-gui-linux
-          path: cmd/gui/ortszeit-gui-linux
-          
-  build-windows-cli:
-    name: Build Windows CLI
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.22'
-          check-latest: true
-        
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-mingw-w64 gcc-multilib
-    
-      - name: Build Windows CLI
-        run: |
-          cd cmd/cli
-          GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -v -o ortszeit-cli-windows.exe
-          ls -l  # Debug: Verify binary was created
-
-      - name: Upload Windows CLI artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ortszeit-cli-windows
           path: |
-            cmd/cli/ortszeit-cli-windows.exe
+            cmd/gui/gui.tar.xz
+            cmd/gui/ortszeit-gui-linux
+
+  # build-windows-cli:
+  #   name: Build Windows CLI
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+      
+  #     - name: Set up Go
+  #       uses: actions/setup-go@v5
+  #       with:
+  #         go-version: '1.22'
+  #         check-latest: true
+        
+  #     - name: Install dependencies
+  #       run: |
+  #         sudo apt-get update
+  #         sudo apt-get install -y gcc-mingw-w64 gcc-multilib
+    
+  #     - name: Build Windows CLI
+  #       run: |
+  #         cd cmd/cli
+  #         GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -v -o ortszeit-cli-windows.exe
+  #         ls -l  # Debug: Verify binary was created
+
+  #     - name: Upload Windows CLI artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: ortszeit-cli-windows
+  #         path: |
+  #           cmd/cli/ortszeit-cli-windows.exe
 
   build-windows-gui:
     name: Build Windows GUI
@@ -125,9 +127,14 @@ jobs:
           ls -l  # Debug: Verify icon was copied
 
       - name: Build Windows GUI
+        env:
+          CGO_ENABLED: 1
+          GOOS: windows
+          GOARCH: amd64
+          CC: x86_64-w64-mingw32-gcc
         run: |
           cd cmd/gui
-          fyne package -os windows -executable Ortszeit-gui-windows.exe
+          fyne package -os windows -executable ortszeit-gui-windows.exe
           ls -l  # Debug: Verify binary was created
           
       - name: Upload Windows GUI artifact
