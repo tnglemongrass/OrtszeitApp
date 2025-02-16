@@ -59,7 +59,7 @@ jobs:
       - name: Build Linux GUI
         run: |
           cd cmd/gui
-          fyne package -os linux -executable Ortszeit-gui-linux main.go
+          fyne package -os linux -executable ortszeit-gui-linux main.go
           ls -l  # Debug: Verify binary was created
             
       - name: Upload Linux GUI artifact
@@ -84,10 +84,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc-mingw-w64 gcc-multilib
-    
-      - name: Install Fyne
-        run: |
-          go install fyne.io/fyne/v2/cmd/fyne@latest
     
       - name: Build Windows CLI
         run: |
