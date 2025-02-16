@@ -54,7 +54,7 @@ jobs:
     
       - name: Prepare Icon
         run: |
-          cp assets/icons/sun.png gui/Icon.png
+          cp assets/icons/sun.png cmd/gui/Icon.png
           
       - name: Build Linux GUI
         run: |
@@ -100,7 +100,7 @@ jobs:
         with:
           name: ortszeit-cli-windows
           path: |
-            cmd/ortszeit-cli-windows.exe
+            cmd/cli/ortszeit-cli-windows.exe
 
   build-windows-gui:
     name: Build Windows GUI
@@ -125,8 +125,8 @@ jobs:
               
       - name: Prepare Icon
         run: |
-          cp assets/icons/sun.png gui/Icon.png
-          ls -l gui/Icon.png  # Debug: Verify icon was copied
+          cp assets/icons/sun.png cmd/gui/Icon.png
+          ls -l  # Debug: Verify icon was copied
 
       - name: Build Windows GUI
         run: |
