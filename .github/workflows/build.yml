@@ -147,7 +147,7 @@ jobs:
         with:
           name: ortszeit-gui-windows
           path: |
-            cmd/gui/ortszeit-gui-windows.exe
+            cmd/gui/gui.exe
           
   # build-android:
   #   name: Build Android
