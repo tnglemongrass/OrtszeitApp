@@ -7,29 +7,29 @@ on:
     branches: [ main ]
 
 jobs:
-  build-linux-cli:
-    name: Build Linux CLI
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+  # build-linux-cli:
+  #   name: Build Linux CLI
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
     
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.22'
-          check-latest: true
+  #     - name: Set up Go
+  #       uses: actions/setup-go@v5
+  #       with:
+  #         go-version: '1.22'
+  #         check-latest: true
 
-      - name: Build Linux CLI
-        run: |
-          cd cmd/cli
-          GOOS=linux GOARCH=amd64 go build -v -o ortszeit-cli-linux
-          ls -l  # Debug: Verify binary was created
+  #     - name: Build Linux CLI
+  #       run: |
+  #         cd cmd/cli
+  #         GOOS=linux GOARCH=amd64 go build -v -o ortszeit-cli-linux
+  #         ls -l  # Debug: Verify binary was created
 
-      - name: Upload Linux CLI artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ortszeit-cli-linux
-          path: cmd/cli/ortszeit-cli-linux
+  #     - name: Upload Linux CLI artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: ortszeit-cli-linux
+  #         path: cmd/cli/ortszeit-cli-linux
           
   build-linux-gui:
     name: Build Linux GUI
@@ -48,8 +48,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y xorg-dev gcc libgl1-mesa-dev
 
-          - name: Install Fyne
-          run: |
+      - name: Install Fyne
+        run: |
             go install fyne.io/fyne/v2/cmd/fyne@latest
     
       - name: Prepare Icon
@@ -68,8 +68,8 @@ jobs:
           name: ortszeit-gui-linux
           path: cmd/gui/ortszeit-gui-linux
           
-  build-windows:
-    name: Build Windows
+  build-windows-cli:
+    name: Build Windows CLI
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -93,7 +93,7 @@ jobs:
         run: |
           cd cmd/cli
           GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -v -o ortszeit-cli-windows.exe
-          ls -l ortszeit-cli.exe  # Debug: Verify binary was created
+          ls -l  # Debug: Verify binary was created
 
       - name: Upload Windows CLI artifact
         uses: actions/upload-artifact@v4
@@ -101,6 +101,27 @@ jobs:
           name: ortszeit-cli-windows
           path: |
             cmd/ortszeit-cli-windows.exe
+
+  build-windows-gui:
+    name: Build Windows GUI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          check-latest: true
+        
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-mingw-w64 gcc-multilib
+    
+      - name: Install Fyne
+        run: |
+          go install fyne.io/fyne/v2/cmd/fyne@latest
               
       - name: Prepare Icon
         run: |
@@ -112,7 +133,6 @@ jobs:
           cd cmd/gui
           fyne package -os windows -executable Ortszeit-gui-windows.exe main.go
           ls -l  # Debug: Verify binary was created
-
           
       - name: Upload Windows GUI artifact
         uses: actions/upload-artifact@v4
@@ -120,50 +140,50 @@ jobs:
           name: ortszeit-gui-windows
           path: |
             cmd/gui/ortszeit-gui-windows.exe
+          
+  # build-android:
+  #   name: Build Android
+  #   runs-on: ubuntu-latest
 
-  build-android:
-    name: Build Android
-    runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v4
 
-    steps:
-    - uses: actions/checkout@v4
+  #   - name: Set up Go
+  #     uses: actions/setup-go@v5
+  #     with:
+  #       go-version: '1.22'
+  #       check-latest: true
 
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.22'
-        check-latest: true
+  #   - name: Set up Java
+  #     uses: actions/setup-java@v4
+  #     with:
+  #       java-version: '17'
+  #       distribution: 'temurin'
 
-    - name: Set up Java
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+  #   - name: Setup Android SDK
+  #     uses: android-actions/setup-android@v3
 
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
+  #   - name: Install NDK
+  #     run: |
+  #       sdkmanager --install "ndk;25.2.9519653"
+  #       echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.2.9519653" >> $GITHUB_ENV
 
-    - name: Install NDK
-      run: |
-        sdkmanager --install "ndk;25.2.9519653"
-        echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.2.9519653" >> $GITHUB_ENV
+  #   - name: Install Fyne
+  #     run: |
+  #       go install fyne.io/fyne/v2/cmd/fyne@latest
 
-    - name: Install Fyne
-      run: |
-        go install fyne.io/fyne/v2/cmd/fyne@latest
+  #   - name: Build Android APK
+  #     run: |
+  #       cd gui
+  #       cp ../assets/icons/sun.png Icon.png
+  #       ls -l Icon.png  # Debug: Verify icon was copied
+  #       fyne package -os android -appID com.example.ortszeitapp -name Ortszeit-android main.go
+  #       ls -l Ortszeit-android.apk  # Debug: Verify APK was created
 
-    - name: Build Android APK
-      run: |
-        cd gui
-        cp ../assets/icons/sun.png Icon.png
-        ls -l Icon.png  # Debug: Verify icon was copied
-        fyne package -os android -appID com.example.ortszeitapp -name Ortszeit-android main.go
-        ls -l Ortszeit-android.apk  # Debug: Verify APK was created
-
-    - name: Upload Android artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ortszeit-android
-        path: gui/Ortszeit-android.apk
-        if-no-files-found: error  # Fail if artifact not found
+  #   - name: Upload Android artifact
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: ortszeit-android
+  #       path: gui/Ortszeit-android.apk
+  #       if-no-files-found: error  # Fail if artifact not found
         
