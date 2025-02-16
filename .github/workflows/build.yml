@@ -59,7 +59,7 @@ jobs:
       - name: Build Linux GUI
         run: |
           cd cmd/gui
-          fyne package -os linux -executable ortszeit-gui-linux main.go
+          fyne package -os linux -executable ortszeit-gui-linux
           ls -l  # Debug: Verify binary was created
             
       - name: Upload Linux GUI artifact
@@ -127,7 +127,7 @@ jobs:
       - name: Build Windows GUI
         run: |
           cd cmd/gui
-          fyne package -os windows -executable Ortszeit-gui-windows.exe main.go
+          fyne package -os windows -executable Ortszeit-gui-windows.exe
           ls -l  # Debug: Verify binary was created
           
       - name: Upload Windows GUI artifact
