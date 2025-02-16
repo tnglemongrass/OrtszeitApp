@@ -5,119 +5,121 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   build-linux-cli:
     name: Build Linux CLI
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
     
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.22'
-        check-latest: true
-        
-    - name: Build Linux CLI
-      run: |
-        cd cmd
-        GOOS=linux GOARCH=amd64 go build -v -o ortszeit-cli cli.go
-        ls -l ortszeit-cli  # Debug: Verify binary was created
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          check-latest: true
 
-    - name: Upload Linux CLI artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ortszeit-linux-cli
-        path: cmd/ortszeit-cli
-        if-no-files-found: error  # Fail if artifact not found
+      - name: Build Linux CLI
+        run: |
+          cd cmd/cli
+          GOOS=linux GOARCH=amd64 go build -v -o ortszeit-cli-linux
+          ls -l  # Debug: Verify binary was created
 
+      - name: Upload Linux CLI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ortszeit-cli-linux
+          path: cmd/cli/ortszeit-cli-linux
+          
   build-linux-gui:
     name: Build Linux GUI
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.22'
-        check-latest: true
+      - uses: actions/checkout@v4
+      
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          check-latest: true
         
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y xorg-dev gcc libgl1-mesa-dev
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xorg-dev gcc libgl1-mesa-dev
 
-    - name: Install Fyne
-      run: |
-        go install fyne.io/fyne/v2/cmd/fyne@latest
-
-    - name: Prepare Icon
-      run: |
-        cp assets/icons/sun.png gui/Icon.png
-        ls -l gui/Icon.png  # Debug: Verify icon was copied
-
-    - name: Build Linux GUI
-      run: |
-        cd gui
-        fyne package -os linux -executable Ortszeit-linux main.go
-        ls -l Ortszeit-linux  # Debug: Verify binary was created
-
-    - name: Upload Linux GUI artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ortszeit-linux-gui
-        path: gui/Ortszeit-linux
-        if-no-files-found: error  # Fail if artifact not found
-
+          - name: Install Fyne
+          run: |
+            go install fyne.io/fyne/v2/cmd/fyne@latest
+    
+      - name: Prepare Icon
+        run: |
+          cp assets/icons/sun.png gui/Icon.png
+          
+      - name: Build Linux GUI
+        run: |
+          cd cmd/gui
+          fyne package -os linux -executable Ortszeit-gui-linux main.go
+          ls -l  # Debug: Verify binary was created
+            
+      - name: Upload Linux GUI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ortszeit-gui-linux
+          path: cmd/gui/ortszeit-gui-linux
+          
   build-windows:
     name: Build Windows
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.22'
-        check-latest: true
+      - uses: actions/checkout@v4
+      
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          check-latest: true
         
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y gcc-mingw-w64 gcc-multilib
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-mingw-w64 gcc-multilib
+    
+      - name: Install Fyne
+        run: |
+          go install fyne.io/fyne/v2/cmd/fyne@latest
+    
+      - name: Build Windows CLI
+        run: |
+          cd cmd/cli
+          GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -v -o ortszeit-cli-windows.exe
+          ls -l ortszeit-cli.exe  # Debug: Verify binary was created
 
-    - name: Install Fyne
-      run: |
-        go install fyne.io/fyne/v2/cmd/fyne@latest
+      - name: Upload Windows CLI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ortszeit-cli-windows
+          path: |
+            cmd/ortszeit-cli-windows.exe
+              
+      - name: Prepare Icon
+        run: |
+          cp assets/icons/sun.png gui/Icon.png
+          ls -l gui/Icon.png  # Debug: Verify icon was copied
 
-    - name: Build Windows CLI
-      run: |
-        cd cmd
-        GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -v -o ortszeit-cli.exe cli.go
-        ls -l ortszeit-cli.exe  # Debug: Verify binary was created
+      - name: Build Windows GUI
+        run: |
+          cd cmd/gui
+          fyne package -os windows -executable Ortszeit-gui-windows.exe main.go
+          ls -l  # Debug: Verify binary was created
 
-    - name: Prepare Icon
-      run: |
-        cp assets/icons/sun.png gui/Icon.png
-        ls -l gui/Icon.png  # Debug: Verify icon was copied
-
-    - name: Build Windows GUI
-      run: |
-        cd gui
-        fyne package -os windows -executable Ortszeit-windows.exe main.go
-        ls -l Ortszeit-windows.exe  # Debug: Verify binary was created
-
-    - name: Upload Windows artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: ortszeit-windows
-        path: |
-          cmd/ortszeit-cli.exe
-          gui/Ortszeit-windows.exe
-        if-no-files-found: error  # Fail if artifacts not found
+          
+      - name: Upload Windows GUI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ortszeit-gui-windows
+          path: |
+            cmd/gui/ortszeit-gui-windows.exe
 
   build-android:
     name: Build Android
@@ -164,3 +166,4 @@ jobs:
         name: ortszeit-android
         path: gui/Ortszeit-android.apk
         if-no-files-found: error  # Fail if artifact not found
+        
