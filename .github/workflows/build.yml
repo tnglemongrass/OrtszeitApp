@@ -55,8 +55,13 @@ jobs:
       - name: Prepare Icon
         run: |
           cp assets/icons/sun.png cmd/gui/Icon.png
-          
-      - name: Build Linux GUI
+
+      - name: Build Linux GUI (standalone)
+        run: |
+          cd cmd/gui
+          go build -tags=linux -ldflags '-s -w' -o ortszeit-gui-linux
+                  
+      - name: Build Linux GUI (package)
         run: |
           cd cmd/gui
           fyne package -os linux -executable ortszeit-gui-linux
@@ -67,8 +72,8 @@ jobs:
         with:
           name: ortszeit-gui-linux
           path: |
-            cmd/gui/gui.tar.xz
             cmd/gui/ortszeit-gui-linux
+            cmd/gui/gui.tar.xz
 
   # build-windows-cli:
   #   name: Build Windows CLI
